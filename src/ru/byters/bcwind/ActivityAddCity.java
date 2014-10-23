@@ -1,4 +1,4 @@
-package ry.byters.bcwind;
+package ru.byters.bcwind;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import ry.byters.bcwind.R;
+
+import utils.CityInfo;
+import utils.ForecastInfo;
+import utils.Utils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -160,7 +166,15 @@ public class ActivityAddCity extends Activity {
 	        				ci.id=id;	        				
 	        				ci.temp=temp;
 	        				ci.windspeed=windspeed;
-	        				ci.forecast = new String[]{"0","0","0","0","0","0","0"};
+	        				ci.forecast = new ForecastInfo[]
+	        						{
+	        						new ForecastInfo(),
+	        						new ForecastInfo(),
+	        						new ForecastInfo(),
+	        						new ForecastInfo(),
+	        						new ForecastInfo(),
+	        						new ForecastInfo()
+	        						};
 	        				Utils.Cityes.add(ci);
 	        			}
         			}

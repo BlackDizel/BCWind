@@ -8,13 +8,29 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/cName"
+		    android:text="CityName"
+		    android:textAppearance="?android:attr/textAppearanceMedium" 
+		    
 		    />		
 		
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/cTemp"
-		    android:layout_alignParentRight="true"
-        	 
+		    android:layout_alignParentRight="true"        	 
+		    android:text="10°"
+		    android:textAppearance="?android:attr/textAppearanceMedium" 
+		    
 		    />
+
+		<TextView
+		    android:id="@+id/cWeather"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_below="@+id/cName"
+		    android:text="Rain"
+		    
+		    />
+
 </RelativeLayout>

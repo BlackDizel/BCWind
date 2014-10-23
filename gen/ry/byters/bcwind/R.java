@@ -25,24 +25,37 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080011;
+        public static final int action_settings=0x7f08001e;
         public static final int button1=0x7f080001;
-        public static final int buttonRemove=0x7f080006;
+        public static final int buttonRemove=0x7f080007;
         public static final int cName=0x7f080004;
         public static final int cTemp=0x7f080005;
+        public static final int cWeather=0x7f080006;
         public static final int container=0x7f080003;
         public static final int editText1=0x7f080000;
+        public static final int forecast1=0x7f080017;
+        public static final int forecast2=0x7f080018;
+        public static final int forecast3=0x7f080019;
+        public static final int forecast4=0x7f08001a;
+        public static final int forecast5=0x7f08001b;
+        public static final int forecast6=0x7f08001c;
         public static final int listView1=0x7f080002;
-        public static final int listViewTowns=0x7f080010;
-        public static final int textViewCityNameRemove=0x7f080007;
-        public static final int tvCityNameDetails=0x7f080008;
-        public static final int tvTemp1=0x7f080009;
-        public static final int tvTemp2=0x7f08000a;
-        public static final int tvTemp3=0x7f08000b;
-        public static final int tvTemp4=0x7f08000c;
-        public static final int tvTemp5=0x7f08000d;
-        public static final int tvTemp6=0x7f08000e;
-        public static final int tvTemp7=0x7f08000f;
+        public static final int listViewTowns=0x7f08001d;
+        public static final int textViewCityNameRemove=0x7f080008;
+        public static final int tvDate=0x7f080009;
+        public static final int tvHumidity=0x7f080016;
+        public static final int tvHumidityTitle=0x7f080015;
+        public static final int tvMisc=0x7f08000c;
+        public static final int tvPressure=0x7f080014;
+        public static final int tvPressureTitle=0x7f080013;
+        public static final int tvSunDay=0x7f080010;
+        public static final int tvSunDayTitle=0x7f08000f;
+        public static final int tvTemp=0x7f08000b;
+        public static final int tvTemp1=0x7f08000d;
+        public static final int tvTempMinMax=0x7f08000e;
+        public static final int tvWeather=0x7f08000a;
+        public static final int tvWind=0x7f080012;
+        public static final int tvWindTitle=0x7f080011;
     }
     public static final class layout {
         public static final int activity_add_city=0x7f030000;
@@ -50,8 +63,9 @@ public final class R {
         public static final int activity_main=0x7f030002;
         public static final int citylist_item=0x7f030003;
         public static final int citylistremove_item=0x7f030004;
-        public static final int fragment_activity_details=0x7f030005;
-        public static final int fragment_activity_main=0x7f030006;
+        public static final int forecast_item=0x7f030005;
+        public static final int fragment_activity_details=0x7f030006;
+        public static final int fragment_activity_main=0x7f030007;
     }
     public static final class menu {
         public static final int activity_main=0x7f070000;
