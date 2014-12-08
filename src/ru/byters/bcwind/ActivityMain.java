@@ -54,7 +54,7 @@ public class ActivityMain extends Activity
 			Utils.LoadCityes(this);
 		SetAdapter();	
 		
-		if (task==null)
+		if (task==null) //application opened
 			UpdateData();	
 	}
 
@@ -77,7 +77,7 @@ public class ActivityMain extends Activity
 		        {	        
 		        	if (!result.isEmpty())
 		        		Utils.Cityes = ConvertData(result);
-	                SetAdapter();
+	                if (lv!=null) SetAdapter();
 		        }
 		};
 		task.execute(s.toString());
