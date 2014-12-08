@@ -45,7 +45,7 @@ public class ActivityMain extends Activity
 			{
 			    Intent intent = new Intent(getApplicationContext(), ActivityDetails.class); 			    
 		    	int pos = Integer.valueOf( arg1.getTag().toString());			    	
-		    	intent.putExtra("pos", pos);
+		    	intent.putExtra(getString(R.string.id_listitem), pos);
 			    startActivity(intent);
 			}
 		});

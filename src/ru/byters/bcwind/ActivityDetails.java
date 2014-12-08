@@ -28,7 +28,7 @@ public class ActivityDetails extends Activity
 		
 		Bundle extras = getIntent().getExtras(); 
 		if (extras != null) 
-		    pos = extras.getInt("pos");
+		    pos = extras.getInt(getString(R.string.id_listitem));
 		
 		setTitle(Utils.Cityes.get(pos).name);
 		
