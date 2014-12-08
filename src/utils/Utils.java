@@ -196,8 +196,6 @@ public class Utils
 	    				}
 	    				c.forecast[j] = fi;
 	    			}
-	    			
-	    			
 	    			l.add(c);
 	    		}
 	    		return l;	    		
