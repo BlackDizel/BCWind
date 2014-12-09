@@ -52,11 +52,7 @@ public class ActivityMain extends Activity
 		});
 		
 		if (Utils.Cityes==null) 
-			Utils.LoadCityes(this);
-		
-		
-		
-		Log.v("MyLog","create");
+			Utils.LoadCityes(this);		
 	}
 
 	@Override
