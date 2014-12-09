@@ -1,6 +1,5 @@
 package utils;
 
-
 public class CityInfo 
 {
 	public String date;

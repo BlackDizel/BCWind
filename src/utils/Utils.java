@@ -21,6 +21,7 @@ import android.util.Log;
 public class Utils 
 { 
 	public static ArrayList<CityInfo> Cityes;
+	
 	public static void LoadCityes(Context ctx)
 	{
 		ArrayList<CityInfo> arr = readFromFile(ctx);
@@ -82,7 +83,7 @@ public class Utils
 		else Cityes = arr;		
 	}
 	
-	//serialization arraylist
+	/**serialization arraylist*/
 	public static void SaveListToFile(Context ctx) 
 	{
 		JSONArray arraylist = new JSONArray();
@@ -135,7 +136,7 @@ public class Utils
 	    } 
 	}
 
-	//deserialization arraylist
+	/**deserialization arraylist*/
 	private static ArrayList<CityInfo> readFromFile(Context ctx) 
 	{
 	    String ret = "";
@@ -158,7 +159,7 @@ public class Utils
 	       return null;
 	    }
 	    
-	    if (ret!="")
+	    if (!ret.isEmpty())
 	    	try
 	    	{
 	    		ArrayList<CityInfo> l = new ArrayList<CityInfo>();
