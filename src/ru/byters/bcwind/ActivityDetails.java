@@ -17,7 +17,8 @@ public class ActivityDetails extends Activity
 {
 	int pos;
 	View[] forecast;
-	static DownloadDataTask task;
+	static Boolean onProcess = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -53,30 +54,37 @@ public class ActivityDetails extends Activity
 				tvPressure.		setText(Utils.Cityes.get(pos).pressure);
 				tvHumidity.		setText(Utils.Cityes.get(pos).humidity);
 				
-				if (task==null)
-					UpdateData();
-				setForecast();
+				
 			}
+	}
+	
+	@Override
+	protected void onResume() 
+	{
+		super.onResume();
+		if (!onProcess)
+			UpdateData();
+		setForecast();
 	}
 	
 	
 	/**update local data with data from server*/
 	void UpdateData()
 	{
-		task = new DownloadDataTask()
+		onProcess=true;
+		new DownloadDataTask()
 		{
 			@Override
 			protected void onPostExecute(String result) 
 	        {	
+				onProcess=false;
 				if (!result.isEmpty()) 
 					{
 						convertData(result);
 						setForecast();
 					}
 	        }				
-		};
-		
-		task.execute("http://api.openweathermap.org/data/2.5/forecast/daily?id="+Utils.Cityes.get(pos).id+"&units=metric");
+		}.execute("http://api.openweathermap.org/data/2.5/forecast/daily?id="+Utils.Cityes.get(pos).id+"&units=metric");
 			
 	}
 
@@ -100,8 +108,8 @@ public class ActivityDetails extends Activity
     							a.getJSONObject(i).getString("speed")+"ì/ñ";
     			
 				Utils.Cityes.get(pos).forecast[i-1]=info;    
-				Utils.SaveListToFile(this);
-    		}
+			}
+    		Utils.SaveListToFile(this);
     	}
     	catch (Exception e)
     	{
