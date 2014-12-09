@@ -10,39 +10,67 @@ import utils.ForecastInfo;
 import utils.Utils;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityAddCity extends Activity implements OnClickListener
+public class ActivityAddCity extends Activity
 {
-
-	Button btAddCity;
-	EditText etCity;
 	ListView lv;
 	static Boolean onProcess=false;
+	SearchView searchView;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_city);
 		
 		lv = (ListView)findViewById(R.id.listView1);
 		SetAdapter();
-		
-		etCity = (EditText)findViewById(R.id.editText1);
-		
-		btAddCity = (Button)findViewById(R.id.button1);
-		btAddCity.setOnClickListener(this);
-		
-		
-		
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		getMenuInflater().inflate(R.menu.activity_add_city, menu);
+		if (searchView==null)
+		{
+			MenuItem item = menu.findItem(R.id.action_search);
+			searchView = (SearchView)item.getActionView();
+		    searchView.setOnQueryTextListener(new OnQueryTextListener() 
+			   {
+				
+				@Override
+				public boolean onQueryTextSubmit(String query) 
+				{
+					UpdateData(query);
+					return true;
+				}
+				
+				@Override
+				public boolean onQueryTextChange(String newText) 
+				{					
+					return true;					
+				}					
+			});
+		}
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		//int id = item.getItemId();		
+		return super.onOptionsItemSelected(item);
 	}
 	
 	/**set adapter for current cities*/
@@ -140,31 +168,27 @@ public class ActivityAddCity extends Activity implements OnClickListener
      }
 
 	
-    @Override
-	public void onClick(View v) 
-    {
-    	//button add city
-    	if (v.getId()==R.id.button1)
-	    		
-			if (!etCity.getText().toString().isEmpty())
-			{
-				if(!onProcess)
-				new DownloadDataTask()
-				{
-					@Override
-					protected void onPostExecute(String result) 
-			        {	     
-						onProcess=false;
-			        	if (result!="") ConvertData(result);
-			        	else 			ShowError();        	
-			        }
-				}.execute("http://api.openweathermap.org/data/2.5/find?q="+
-								etCity.getText().toString().replace(" ", "%20")+
-								"&type=like&lang=ru&units=metric");
-				onProcess=true;
-			}
-		
-	}
+	 void UpdateData(String data)
+	 {
+		 if ((!data.isEmpty())&&(!onProcess))		
+		 {
+			 onProcess=true;
+			 new DownloadDataTask()
+			 {
+				@Override
+				protected void onPostExecute(String result) 
+			    {	     
+					onProcess=false;
+			    	if (!result.isEmpty()) 	ConvertData(result);
+			    	else 					ShowError();        	
+			    }
+			}.execute(	"http://api.openweathermap.org/data/2.5/find?q="+
+						data.replace(" ", "%20")+
+						"&type=like&lang=ru&units=metric");				
+		}
+	 }
+	 
+
 	   
 	
 }
