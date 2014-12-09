@@ -3,6 +3,7 @@ package ru.byters.bcwind;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 public class ActivityMain extends Activity 
 {
 	ListView lv;
+	/**is download data on progress*/
 	static Boolean onProcess=false;
 	
 	@Override
@@ -37,8 +39,8 @@ public class ActivityMain extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		lv = (ListView)findViewById(R.id.listViewTowns);
 		
+		lv = (ListView)findViewById(R.id.listViewTowns);
 		lv.setOnItemClickListener(new OnItemClickListener() 
 		{			
 			@Override
@@ -49,8 +51,8 @@ public class ActivityMain extends Activity
 		    	intent.putExtra(getString(R.string.id_listitem), pos);
 			    startActivity(intent);
 			}
-		});
-		
+		});		
+
 		if (Utils.Cityes==null) 
 			Utils.LoadCityes(this);		
 	}
@@ -66,7 +68,7 @@ public class ActivityMain extends Activity
 		
 	};
 	
-	
+	/**download data from server*/
 	void UpdateData()
 	{	
 		onProcess=true;
@@ -112,6 +114,7 @@ public class ActivityMain extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 	
+	/**parse json to city list*/
 	ArrayList<CityInfo> ConvertData(String data)
     {
     	try
@@ -137,6 +140,7 @@ public class ActivityMain extends Activity
     							" по "+Utils.calcDate("HH:mm",a.getJSONObject(i).getJSONObject("sys").getString("sunset"));
     			c.tempMinMax = 	"от "+a.getJSONObject(i).getJSONObject("main").getString("temp_min")+"°"+
     							" до "+a.getJSONObject(i).getJSONObject("main").getString("temp_max")+"°";
+    			c.country = 	a.getJSONObject(i).getJSONObject("sys").getString("country");        			
     			        			
     			c.weather="";
     			for (int j=0;j<w.length();++j)
@@ -164,6 +168,7 @@ public class ActivityMain extends Activity
     	}        	
     }
     
+	/**show cities on activity*/
 	void SetAdapter()
     {
 		if (lv!=null)
