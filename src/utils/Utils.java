@@ -20,6 +20,24 @@ import android.util.Log;
 
 public class Utils 
 { 
+	private static final String ID="id";
+	private static final String NAME="name";
+	private static final String TEMP="temp";
+	private static final String WINDSPEED="windspeed";
+	private static final String DATE="date";
+	private static final String WEATHER="weather";
+	private static final String TEMPMINMAX="tempminmax";
+	private static final String SUNDAY="sunday";
+	private static final String PRESSURE="pressure";
+	private static final String HUMIDITY="humidity";
+	private static final String COUNTRY="contry";
+	private static final String MISC="misc";
+	private static final String FORECAST="forecast";
+	private static final String FILENAME="config.txt";
+	
+	
+	
+	
 	public static ArrayList<CityInfo> Cityes;
 	
 	public static void LoadCityes(Context ctx)
@@ -95,32 +113,32 @@ public class Utils
 			JSONObject object = new JSONObject();
 			try 
 			{
-				object.put("id", ci.id);
-				object.put("name", ci.name);
-				object.put("temp", ci.temp);
-				object.put("windspeed", ci.windspeed);
-				object.put("date", ci.date);
-				object.put("weather", ci.weather);	
-				object.put("tempMinMax", ci.tempMinMax);
-				object.put("sunDay", ci.sunDay);
-				object.put("pressure", ci.pressure);
-				object.put("humidity", ci.humidity);
-				object.put("country", ci.country);
+				object.put(ID, 			ci.id);
+				object.put(NAME, 		ci.name);
+				object.put(TEMP, 		ci.temp);
+				object.put(WINDSPEED, 	ci.windspeed);
+				object.put(DATE, 		ci.date);
+				object.put(WEATHER, 	ci.weather);	
+				object.put(TEMPMINMAX, 	ci.tempMinMax);
+				object.put(SUNDAY, 		ci.sunDay);
+				object.put(PRESSURE, 	ci.pressure);
+				object.put(HUMIDITY, 	ci.humidity);
+				object.put(COUNTRY, 	ci.country);
 				
 				
 				JSONArray forecast = new JSONArray();
 				for(ForecastInfo f:ci.forecast) 
 				{
 					JSONObject j = new JSONObject();
-					j.put("date", f.date);
-					j.put("misc", f.misc);
-					j.put("temp", f.temp);
-					j.put("weather", f.weather);
+					j.put(DATE, 	f.date);
+					j.put(MISC, 	f.misc);
+					j.put(TEMP, 	f.temp);
+					j.put(WEATHER, 	f.weather);
 					
 					forecast.put(j);
 				}
 				
-				object.put("forecast", forecast);
+				object.put(FORECAST, forecast);
 				
 			} catch (JSONException e) {
 			    return;
@@ -132,7 +150,7 @@ public class Utils
 		  
 	    try 
 	    {
-	        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(ctx.openFileOutput("config.txt", Context.MODE_PRIVATE));
+	        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(ctx.openFileOutput(FILENAME, Context.MODE_PRIVATE));
 	        outputStreamWriter.write(data);
 	        outputStreamWriter.close();
 	    }
@@ -147,7 +165,7 @@ public class Utils
 	    String ret = "";
 	    try 
 	    {
-	        InputStream inputStream = ctx.openFileInput("config.txt");
+	        InputStream inputStream = ctx.openFileInput(FILENAME);
 	        if ( inputStream != null ) 
 	        {
 	            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -157,7 +175,6 @@ public class Utils
 	            while ( (receiveString = bufferedReader.readLine()) != null ) stringBuilder.append(receiveString);
 	            inputStream.close();
 	            ret = stringBuilder.toString();
-	            Log.v("MyLog",ret);
 	        }
 	    }
 	    catch (IOException e) 
@@ -173,20 +190,20 @@ public class Utils
 	    		for (int i=0;i<a.length();++i)
 	    		{
 	    			CityInfo c = new CityInfo();
-	    			c.temp = 		a.getJSONObject(i).getString("temp");
-	    			c.name = 		a.getJSONObject(i).getString("name");
-	    			c.windspeed = 	a.getJSONObject(i).getString("windspeed");
-	    			c.id = 			a.getJSONObject(i).getString("id");
-	    			c.date =		a.getJSONObject(i).getString("date");
-	    			c.weather =		a.getJSONObject(i).getString("weather");
-	    			c.tempMinMax =	a.getJSONObject(i).getString("tempMinMax");
-	    			c.sunDay =		a.getJSONObject(i).getString("sunDay");
-	    			c.pressure =	a.getJSONObject(i).getString("pressure");
-	    			c.humidity =	a.getJSONObject(i).getString("humidity");
-	    			c.country =		a.getJSONObject(i).getString("country");
+	    			c.temp = 		a.getJSONObject(i).getString(TEMP);
+	    			c.name = 		a.getJSONObject(i).getString(NAME);
+	    			c.windspeed = 	a.getJSONObject(i).getString(WINDSPEED);
+	    			c.id = 			a.getJSONObject(i).getString(ID);
+	    			c.date =		a.getJSONObject(i).getString(DATE);
+	    			c.weather =		a.getJSONObject(i).getString(WEATHER);
+	    			c.tempMinMax =	a.getJSONObject(i).getString(TEMPMINMAX);
+	    			c.sunDay =		a.getJSONObject(i).getString(SUNDAY);
+	    			c.pressure =	a.getJSONObject(i).getString(PRESSURE);
+	    			c.humidity =	a.getJSONObject(i).getString(HUMIDITY);
+	    			c.country =		a.getJSONObject(i).getString(COUNTRY);
 	    			
 	    			
-	    			JSONArray forecast = a.getJSONObject(i).getJSONArray("forecast");
+	    			JSONArray forecast = a.getJSONObject(i).getJSONArray(FORECAST);
 	    			c.forecast = new ForecastInfo[forecast.length()];
 	    			
 	    			for (int j=0;j<forecast.length();++j)
@@ -195,10 +212,10 @@ public class Utils
 	    				ForecastInfo fi = new ForecastInfo();
 	    				try
 	    				{	
-		    				fi.date= jo.getString("date");
-		    				fi.misc= jo.getString("misc");
-		    				fi.temp= jo.getString("temp");
-		    				fi.weather= jo.getString("weather");
+		    				fi.date= jo.getString(DATE);
+		    				fi.misc= jo.getString(MISC);
+		    				fi.temp= jo.getString(TEMP);
+		    				fi.weather= jo.getString(WEATHER);
 	    				}
 	    				catch (Exception e1)
 	    				{	    					
