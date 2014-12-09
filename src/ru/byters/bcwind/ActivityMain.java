@@ -15,6 +15,7 @@ import utils.Utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +30,7 @@ import android.widget.TextView;
 public class ActivityMain extends Activity 
 {
 	ListView lv;
-	static DownloadDataTask task;
+	static Boolean onProcess=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -52,14 +53,27 @@ public class ActivityMain extends Activity
 		
 		if (Utils.Cityes==null) 
 			Utils.LoadCityes(this);
-		SetAdapter();	
 		
-		if (task==null) //application opened
-			UpdateData();	
+		
+		
+		Log.v("MyLog","create");
 	}
 
+	@Override
+	protected void onResume() 
+	{
+		super.onResume();
+		SetAdapter();	
+		
+		if (!onProcess) 
+			UpdateData();	
+		
+	};
+	
+	
 	void UpdateData()
 	{	
+		onProcess=true;
 		StringBuilder s = new StringBuilder();
     	s.append("http://api.openweathermap.org/data/2.5/group?id=");
     	if (Utils.Cityes.size()>0)
@@ -70,17 +84,17 @@ public class ActivityMain extends Activity
     	}
     	s.append("&units=metric&lang=ru");
     	
-		task = new DownloadDataTask()
+		new DownloadDataTask()
 		{
 			@Override
 			 protected void onPostExecute(String result) 
-		        {	        
+		        {	
+					onProcess=false;
 		        	if (!result.isEmpty())
 		        		Utils.Cityes = ConvertData(result);
-	                if (lv!=null) SetAdapter();
+	                SetAdapter();
 		        }
-		};
-		task.execute(s.toString());
+		}.execute(s.toString());
 	}
 	
 	@Override
@@ -145,7 +159,7 @@ public class ActivityMain extends Activity
     			
     			list.add(c);
     		}	
-    		Utils.SaveListToFile(getApplicationContext());
+    		Utils.SaveListToFile(this);
     		return list;
     	}
     	catch (Exception e)
@@ -156,27 +170,30 @@ public class ActivityMain extends Activity
     
 	void SetAdapter()
     {
-    	@SuppressWarnings({ "rawtypes", "unchecked" })
-        ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylist_item, R.id.cName, Utils.Cityes) 
-        {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) 
-            {
-                View view = super.getView(position, convertView, parent);
-                TextView tvCityName = 		(TextView) view.findViewById(R.id.cName);
-                TextView tvCityTemp = 		(TextView) view.findViewById(R.id.cTemp);
-                TextView tvCityWeather = 	(TextView) view.findViewById(R.id.cWeather);
-                
-                tvCityName.setText(		Utils.Cityes.get(position).name);	                
-                tvCityTemp.setText(		Utils.Cityes.get(position).temp);
-                tvCityWeather.setText( 	Utils.Cityes.get(position).weather);
-	            
-                view.setTag(position);
-                
-                return view;
-            }
-        };
-        if (lv!=null) lv.setAdapter(mAdapter);
+		if (lv!=null)
+		{
+	    	@SuppressWarnings({ "rawtypes", "unchecked" })
+	        ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylist_item, R.id.cName, Utils.Cityes) 
+	        {
+	            @Override
+	            public View getView(int position, View convertView, ViewGroup parent) 
+	            {
+	                View view = super.getView(position, convertView, parent);
+	                TextView tvCityName = 		(TextView) view.findViewById(R.id.cName);
+	                TextView tvCityTemp = 		(TextView) view.findViewById(R.id.cTemp);
+	                TextView tvCityWeather = 	(TextView) view.findViewById(R.id.cWeather);
+	                
+	                tvCityName.setText(		Utils.Cityes.get(position).name);	                
+	                tvCityTemp.setText(		Utils.Cityes.get(position).temp);
+	                tvCityWeather.setText( 	Utils.Cityes.get(position).weather);
+		            
+	                view.setTag(position);
+	                
+	                return view;
+	            }
+	        };
+	        lv.setAdapter(mAdapter);
+		}
 	}
 
 }
