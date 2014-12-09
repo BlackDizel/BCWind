@@ -4,6 +4,7 @@ public class CityInfo
 {
 	public String date;
 	public String name;
+	public String country;
 	public String temp;
 	public String windspeed;
 	public String weather;	

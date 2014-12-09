@@ -32,6 +32,7 @@ public class Utils
 			CityInfo c = new CityInfo();
 			c.id="524901";
 			c.name="Moscow";
+			c.country="RU";
 			c.temp="none";
 			c.windspeed="none";
 			c.weather="none";
@@ -49,6 +50,7 @@ public class Utils
 			c = new CityInfo();
 			c.id="703448";
 			c.name="Kiev";
+			c.country="UA";
 			c.temp="none";
 			c.windspeed="none";
 			c.weather="none";
@@ -66,6 +68,7 @@ public class Utils
 			c = new CityInfo();
 			c.id="2643743";
 			c.name="London";
+			c.country="GB";
 			c.temp="none";
 			c.windspeed="none";
 			c.weather="none";
@@ -102,6 +105,8 @@ public class Utils
 				object.put("sunDay", ci.sunDay);
 				object.put("pressure", ci.pressure);
 				object.put("humidity", ci.humidity);
+				object.put("country", ci.country);
+				
 				
 				JSONArray forecast = new JSONArray();
 				for(ForecastInfo f:ci.forecast) 
@@ -152,6 +157,7 @@ public class Utils
 	            while ( (receiveString = bufferedReader.readLine()) != null ) stringBuilder.append(receiveString);
 	            inputStream.close();
 	            ret = stringBuilder.toString();
+	            Log.v("MyLog",ret);
 	        }
 	    }
 	    catch (IOException e) 
@@ -177,6 +183,8 @@ public class Utils
 	    			c.sunDay =		a.getJSONObject(i).getString("sunDay");
 	    			c.pressure =	a.getJSONObject(i).getString("pressure");
 	    			c.humidity =	a.getJSONObject(i).getString("humidity");
+	    			c.country =		a.getJSONObject(i).getString("country");
+	    			
 	    			
 	    			JSONArray forecast = a.getJSONObject(i).getJSONArray("forecast");
 	    			c.forecast = new ForecastInfo[forecast.length()];

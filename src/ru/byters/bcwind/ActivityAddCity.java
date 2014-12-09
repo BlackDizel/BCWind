@@ -1,5 +1,7 @@
 package ru.byters.bcwind;
 
+import java.util.Locale;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -89,7 +91,8 @@ public class ActivityAddCity extends Activity
 	                 TextView tvCityName = 	(TextView) 	view.findViewById(R.id.textViewCityNameRemove);
 	                 Button b = 			(Button) 	view.findViewById(R.id.buttonRemove);
 	                 
-	                 tvCityName.setText(	Utils.Cityes.get(position).name);	                
+	                 Locale l = new Locale("",Utils.Cityes.get(position).country);
+	                 tvCityName.setText(	Utils.Cityes.get(position).name+", "+l.getDisplayCountry());	                
 	                 
 	                 b.setOnClickListener(new OnClickListener() 
 	                 {						
@@ -128,19 +131,15 @@ public class ActivityAddCity extends Activity
      		{
         		JSONArray a= o.getJSONArray("list");
         		for (int i=0;i<a.length();++i)
-        		{
-        			String id = a.getJSONObject(i).getString("id");
-        			String name = a.getJSONObject(i).getString("name");
-        			String temp = a.getJSONObject(i).getJSONObject("main").getString("temp");
-        			String windspeed = a.getJSONObject(i).getJSONObject("wind").getString("speed");
-        			
+        		{	
         			if (Utils.Cityes!=null)
-        			{
+        			{	
         				CityInfo ci = new CityInfo();
-        				ci.name=name;
-        				ci.id=id;	        				
-        				ci.temp=temp;
-        				ci.windspeed=windspeed;
+        				ci.name= 		a.getJSONObject(i).getString("name");            			
+        				ci.id=			a.getJSONObject(i).getString("id");	        				
+        				ci.temp=		a.getJSONObject(i).getJSONObject("main").getString("temp");            			
+        				ci.windspeed=	a.getJSONObject(i).getJSONObject("wind").getString("speed");            			
+        				ci.country= 	a.getJSONObject(i).getJSONObject("sys").getString("country");
         				ci.forecast = new ForecastInfo[]
         						{
         						new ForecastInfo(),
@@ -187,7 +186,6 @@ public class ActivityAddCity extends Activity
 						"&type=like&lang=ru&units=metric");				
 		}
 	 }
-	 
 
 	   
 	
