@@ -9,5 +9,8 @@
     <string name="title_activity_activity_details">Details</string>
     <string name="title_activity_activity_add_city">Add City</string>
     <string name="id_listitem">pos</string>
+    <string name="mmrs">мм р.с.</string>
+    <string name="error_add_city">cannot add city</string>
+    <string name="city_added">city added</string>
 
 </resources>
