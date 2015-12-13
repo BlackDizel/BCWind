@@ -13,21 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import ru.byters.bcwind.R;
-import ru.byters.bcwind.api.DownloadDataTask;
-import ru.byters.bcwind.model.CityInfo;
-import ru.byters.bcwind.model.ForecastInfo;
+import ru.byters.bcwind.api.Api;
+import ru.byters.bcwind.api.OnCompleteListener;
 import ru.byters.bcwind.utils.Utils;
 
 
-public class ActivityMain extends Activity {
+public class ActivityMain extends Activity implements OnCompleteListener {
     /**
      * is download data on progress
      */
@@ -61,34 +53,22 @@ public class ActivityMain extends Activity {
 
         if (!onProcess)
             UpdateData();
-
     }
-
-    ;
 
     /**
      * download data from server
      */
     void UpdateData() {
         onProcess = true;
+
         StringBuilder s = new StringBuilder();
-        s.append("http://api.openweathermap.org/data/2.5/group?id=");
         if (Utils.Cities.size() > 0) {
             s.append(Utils.Cities.get(0).id);
             for (int i = 1; i < Utils.Cities.size(); ++i)
-                s.append("," + Utils.Cities.get(i).id);
+                s.append(",").append(Utils.Cities.get(i).id);
         }
-        s.append("&units=metric&lang=ru");
 
-        new DownloadDataTask() {
-            @Override
-            protected void onPostExecute(String result) {
-                onProcess = false;
-                if (!result.isEmpty())
-                    Utils.Cities = ConvertData(result);
-                SetAdapter();
-            }
-        }.execute(s.toString());
+        Api.group(s.toString(), this);
     }
 
     @Override
@@ -109,57 +89,6 @@ public class ActivityMain extends Activity {
     }
 
     /**
-     * parse json to city list
-     */
-    ArrayList<CityInfo> ConvertData(String data) {
-        try {
-            ArrayList<CityInfo> list = new ArrayList<CityInfo>();
-            JSONObject o = new JSONObject(data);
-            JSONArray a = o.getJSONArray("list");
-            for (int i = 0; i < a.length(); ++i) {
-                String now = new SimpleDateFormat("dd MMMM").format(new Date());
-
-                CityInfo c = new CityInfo();
-                JSONArray w = a.getJSONObject(i).getJSONArray("weather");
-
-                c.id = a.getJSONObject(i).getString("id");
-                c.name = a.getJSONObject(i).getString("name");
-                c.temp = a.getJSONObject(i).getJSONObject("main").getString("temp") + "°";
-                c.windspeed = a.getJSONObject(i).getJSONObject("wind").getString("speed") + "м/с";
-                c.date = now.toString();
-                c.humidity = a.getJSONObject(i).getJSONObject("main").getString("humidity") + "%";
-                c.pressure = Utils.calcPressure(this, a.getJSONObject(i).getJSONObject("main").getString("pressure"));
-                c.sunDay = "x " + Utils.calcDate("HH:mm", a.getJSONObject(i).getJSONObject("sys").getString("sunrise")) +
-                        " xx " + Utils.calcDate("HH:mm", a.getJSONObject(i).getJSONObject("sys").getString("sunset"));
-                c.tempMinMax = "xx " + a.getJSONObject(i).getJSONObject("main").getString("temp_min") + "°" +
-                        " xx " + a.getJSONObject(i).getJSONObject("main").getString("temp_max") + "°";
-                c.country = a.getJSONObject(i).getJSONObject("sys").getString("country");
-
-                c.weather = "";
-                for (int j = 0; j < w.length(); ++j)
-                    c.weather += (j != w.length() - 1) ? w.getJSONObject(j).getString("main") + ", " :
-                            w.getJSONObject(j).getString("main");
-
-                c.forecast = new ForecastInfo[]
-                        {
-                                new ForecastInfo(),
-                                new ForecastInfo(),
-                                new ForecastInfo(),
-                                new ForecastInfo(),
-                                new ForecastInfo(),
-                                new ForecastInfo()
-                        };
-
-                list.add(c);
-            }
-            Utils.SaveListToFile(this);
-            return list;
-        } catch (Exception e) {
-            return Utils.Cities;
-        }
-    }
-
-    /**
      * show cities on activity
      */
     void SetAdapter() {
@@ -174,7 +103,9 @@ public class ActivityMain extends Activity {
                     TextView tvCityWeather = (TextView) view.findViewById(R.id.cWeather);
 
                     tvCityName.setText(Utils.Cities.get(position).name);
-                    tvCityTemp.setText(Utils.Cities.get(position).temp);
+                    tvCityTemp.setText(String.format("%s%s"
+                            , Utils.Cities.get(position).temp
+                            , getString(R.string.celsium)));
                     tvCityWeather.setText(Utils.Cities.get(position).weather);
 
                     view.setTag(position);
@@ -186,4 +117,15 @@ public class ActivityMain extends Activity {
         }
     }
 
+    @Override
+    public void onComplete() {
+        onProcess = false;
+        Utils.SaveListToFile(this);
+        SetAdapter();
+    }
+
+    @Override
+    public void onError() {
+        onProcess = false;
+    }
 }

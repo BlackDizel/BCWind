@@ -13,5 +13,10 @@
     <string name="error_add_city">cannot add city</string>
     <string name="city_added">city added</string>
     <string name="celsium">°</string>
+    <string name="temp_from_to">от %s@string/celsium до %s@string/celsium</string>
+    <string name="daytime_from_to">с %s по %s</string>
+    <string name="SPEED_FORMAT">%sм/с</string>
+    <string name="PERCENT_FORMAT">%s%%</string>
+    <string name="CELSIUM_FORMAT">%s@string/celsium</string>
 
 </resources>

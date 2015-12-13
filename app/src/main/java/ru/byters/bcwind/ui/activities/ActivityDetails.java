@@ -12,6 +12,7 @@ import ru.byters.bcwind.model.CityInfo;
 import ru.byters.bcwind.utils.Utils;
 
 public class ActivityDetails extends Activity implements OnCompleteListener {
+    public static final String DATE_FORMAT = "HH:mm";
     static Boolean onProcess = false;
     int pos;
     View[] forecast;
@@ -42,12 +43,18 @@ public class ActivityDetails extends Activity implements OnCompleteListener {
 
                 tvDate.setText(Utils.Cities.get(pos).date);
                 tvTemp1.setText(Utils.Cities.get(pos).temp);
-                tvTempMinMax.setText(Utils.Cities.get(pos).tempMinMax);
+
+                tvTempMinMax.setText(String.format(getString(R.string.temp_from_to)
+                        , Utils.Cities.get(pos).tempMin
+                        , Utils.Cities.get(pos).tempMax));
+
                 tvWeather.setText(Utils.Cities.get(pos).weather);
-                tvSunDay.setText(Utils.Cities.get(pos).sunDay);
-                tvWind.setText(Utils.Cities.get(pos).windspeed);
-                tvPressure.setText(Utils.Cities.get(pos).pressure);
-                tvHumidity.setText(Utils.Cities.get(pos).humidity);
+                tvSunDay.setText(String.format(getString(R.string.daytime_from_to)
+                        , Utils.calcDate(DATE_FORMAT, Utils.Cities.get(pos).sunrise)
+                        , Utils.calcDate(DATE_FORMAT, Utils.Cities.get(pos).sunset)));
+                tvWind.setText(String.format(getString(R.string.SPEED_FORMAT), Utils.Cities.get(pos).windspeed));
+                tvPressure.setText(Utils.calcPressure(this, Utils.Cities.get(pos).pressure));
+                tvHumidity.setText(String.format(getString(R.string.PERCENT_FORMAT), Utils.Cities.get(pos).humidity));
             }
     }
 
@@ -89,7 +96,7 @@ public class ActivityDetails extends Activity implements OnCompleteListener {
                 TextView tvWeather = (TextView) forecast[i].findViewById(R.id.tvWeather);
                 TextView tvMisc = (TextView) forecast[i].findViewById(R.id.tvMisc);
 
-                forecastTemp.setText(String.format("%s%s", c.forecast[i].temp, getString(R.string.celsium)));
+                forecastTemp.setText(String.format(getString(R.string.CELSIUM_FORMAT), c.forecast[i].temp));
                 tvDate.setText(c.forecast[i].date);
                 tvWeather.setText(c.forecast[i].weather);
                 tvMisc.setText(Utils.calcPressure(this, c.forecast[i].misc));

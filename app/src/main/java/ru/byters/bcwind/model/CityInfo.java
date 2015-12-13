@@ -10,8 +10,10 @@ public class CityInfo implements Serializable {
     public String windspeed;
     public String weather;
     public String id;
-    public String tempMinMax;
-    public String sunDay;
+    public String tempMin;
+    public String tempMax;
+    public String sunrise;
+    public String sunset;
     public String pressure;
     public String humidity;
     public ForecastInfo[] forecast;
