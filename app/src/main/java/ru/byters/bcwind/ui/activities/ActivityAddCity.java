@@ -21,13 +21,23 @@ import org.json.JSONObject;
 import java.util.Locale;
 
 import ru.byters.bcwind.R;
-import ru.byters.bcwind.api.DownloadDataTask;
+import ru.byters.bcwind.api.Api;
+import ru.byters.bcwind.api.OnCompleteListener;
 import ru.byters.bcwind.model.CityInfo;
 import ru.byters.bcwind.model.ForecastInfo;
 import ru.byters.bcwind.utils.Utils;
 
-public class ActivityAddCity extends Activity {
-    static Boolean onProcess = false;
+public class ActivityAddCity extends Activity implements OnCompleteListener {
+    public static final String FIELD_COUNT = "count";
+    public static final String FIELD_LIST = "list";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_MAIN = "main";
+    public static final String FIELD_TEMP = "temp";
+    public static final String FIELD_WIND = "wind";
+    public static final String FIELD_SPEED = "speed";
+    public static final String FIELD_SYS = "sys";
+    public static final String FIELD_COUNTRY = "country";
     ListView lv;
     SearchView searchView;
 
@@ -73,23 +83,23 @@ public class ActivityAddCity extends Activity {
      * set adapter for current cities
      */
     void SetAdapter() {
-        if (Utils.Cityes == null) Utils.LoadCityes(this);
+        if (Utils.Cities == null) Utils.LoadCityes(this);
         if (lv != null) {
             @SuppressWarnings({"rawtypes", "unchecked"})
-            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylistremove_item, R.id.textViewCityNameRemove, Utils.Cityes) {
+            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylistremove_item, R.id.textViewCityNameRemove, Utils.Cities) {
                 @Override
                 public View getView(final int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
                     TextView tvCityName = (TextView) view.findViewById(R.id.textViewCityNameRemove);
                     Button b = (Button) view.findViewById(R.id.buttonRemove);
 
-                    Locale l = new Locale("", Utils.Cityes.get(position).country);
-                    tvCityName.setText(Utils.Cityes.get(position).name + ", " + l.getDisplayCountry());
+                    Locale l = new Locale("", Utils.Cities.get(position).country);
+                    tvCityName.setText(String.format("%s, %s", Utils.Cities.get(position).name, l.getDisplayCountry()));
 
                     b.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Utils.Cityes.remove(position);
+                            Utils.Cities.remove(position);
                             Utils.SaveListToFile(getApplicationContext());//FIX:only when user leave this activity
                             notifyDataSetChanged();
                         }
@@ -107,7 +117,7 @@ public class ActivityAddCity extends Activity {
      * show message error in toast
      */
     void ShowError() {
-        Toast.makeText(getApplicationContext(), "cannot add city", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.error_add_city, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -117,18 +127,18 @@ public class ActivityAddCity extends Activity {
         try {
             int count = 0;
             JSONObject o = new JSONObject(data);
-            count = o.getInt("count");
+            count = o.getInt(FIELD_COUNT);
             if (count == 0) ShowError();
             else {
-                JSONArray a = o.getJSONArray("list");
+                JSONArray a = o.getJSONArray(FIELD_LIST);
                 for (int i = 0; i < a.length(); ++i) {
-                    if (Utils.Cityes != null) {
+                    if (Utils.Cities != null) {
                         CityInfo ci = new CityInfo();
-                        ci.name = a.getJSONObject(i).getString("name");
-                        ci.id = a.getJSONObject(i).getString("id");
-                        ci.temp = a.getJSONObject(i).getJSONObject("main").getString("temp");
-                        ci.windspeed = a.getJSONObject(i).getJSONObject("wind").getString("speed");
-                        ci.country = a.getJSONObject(i).getJSONObject("sys").getString("country");
+                        ci.name = a.getJSONObject(i).getString(FIELD_NAME);
+                        ci.id = a.getJSONObject(i).getString(FIELD_ID);
+                        ci.temp = a.getJSONObject(i).getJSONObject(FIELD_MAIN).getString(FIELD_TEMP);
+                        ci.windspeed = a.getJSONObject(i).getJSONObject(FIELD_WIND).getString(FIELD_SPEED);
+                        ci.country = a.getJSONObject(i).getJSONObject(FIELD_SYS).getString(FIELD_COUNTRY);
                         ci.forecast = new ForecastInfo[]
                                 {
                                         new ForecastInfo(),
@@ -138,11 +148,11 @@ public class ActivityAddCity extends Activity {
                                         new ForecastInfo(),
                                         new ForecastInfo()
                                 };
-                        Utils.Cityes.add(ci);
+                        Utils.Cities.add(ci);
                     }
                 }
-                Toast.makeText(getApplicationContext(), "City added", Toast.LENGTH_LONG).show();
-                Utils.SaveListToFile(getApplicationContext()); //FIX:only when user leave this activity
+                Toast.makeText(getApplicationContext(), R.string.city_added, Toast.LENGTH_LONG).show();
+                Utils.SaveListToFile(getApplicationContext()); //todo only when user leave this activity
                 SetAdapter();
             }
 
@@ -150,25 +160,25 @@ public class ActivityAddCity extends Activity {
             ShowError();
         }
 
-
     }
 
-
-    void UpdateData(String data) {
-        if ((!data.isEmpty()) && (!onProcess)) {
-            onProcess = true;
-            new DownloadDataTask() {
-                @Override
-                protected void onPostExecute(String result) {
-                    onProcess = false;
-                    if (!result.isEmpty()) ConvertData(result);
-                    else ShowError();
-                }
-            }.execute("http://api.openweathermap.org/data/2.5/find?q=" +
-                    data.replace(" ", "%20") +
-                    "&type=like&lang=ru&units=metric");
-        }
+    void UpdateData(String query) {
+        if (searchView != null)
+            searchView.setEnabled(false);
+        Api.find(query, this);
     }
 
+    @Override
+    public void onComplete(String s) {
+        if (searchView != null)
+            searchView.setEnabled(true);
+        ConvertData(s);
+    }
 
+    @Override
+    public void onError() {
+        if (searchView != null)
+            searchView.setEnabled(true);
+        ShowError();
+    }
 }
