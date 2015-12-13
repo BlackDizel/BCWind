@@ -85,6 +85,7 @@ public class Utils {
     }
 
     public static String calcDate(String format, String data) {
+        if (data == null || data.isEmpty()) return "";
         long dv = Long.valueOf(data) * 1000;
         Date df = new Date(dv);
         return new SimpleDateFormat(format).format(df);
@@ -157,6 +158,7 @@ public class Utils {
 
 
     public static String calcPressure(Context context, String data) {
+        if (data == null || data.isEmpty()) return "";
         double mbar = Double.valueOf(data);
         int mmrs = (int) Math.round((mbar / 1.3332));
         return String.valueOf(mmrs) + context.getResources().getString(R.string.mmrs);
