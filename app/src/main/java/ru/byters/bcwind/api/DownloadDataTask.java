@@ -6,7 +6,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -15,13 +14,12 @@ import java.io.IOException;
 
 public class DownloadDataTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
-        StringBuilder builder = new StringBuilder();
-        HttpClient client = new DefaultHttpClient();
-
-        HttpGet httpGet = new HttpGet(params[0]);
+        if (params.length < 1) return "";
+        String uri = params[0];
+        if (uri == null || uri.isEmpty()) return null;
 
         try {
-            HttpResponse response = client.execute(httpGet);
+            HttpResponse response = new DefaultHttpClient().execute(new HttpGet(uri));
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
