@@ -99,12 +99,14 @@ public class ActivityDetails extends Activity implements OnCompleteListener {
 
     @Override
     public void onComplete() {
+        onProcess = false;
         Utils.SaveListToFile(this);
         setForecast();
     }
 
     @Override
     public void onError() {
+        onProcess = false;
         //todo on error retrieve info from server
     }
 }
