@@ -5,16 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import ru.byters.bcwind.R;
-import ru.byters.bcwind.api.DownloadDataTask;
+import ru.byters.bcwind.api.Api;
+import ru.byters.bcwind.api.OnCompleteListener;
 import ru.byters.bcwind.model.CityInfo;
-import ru.byters.bcwind.model.ForecastInfo;
 import ru.byters.bcwind.utils.Utils;
 
-public class ActivityDetails extends Activity {
+public class ActivityDetails extends Activity implements OnCompleteListener {
     static Boolean onProcess = false;
     int pos;
     View[] forecast;
@@ -51,8 +48,6 @@ public class ActivityDetails extends Activity {
                 tvWind.setText(Utils.Cities.get(pos).windspeed);
                 tvPressure.setText(Utils.Cities.get(pos).pressure);
                 tvHumidity.setText(Utils.Cities.get(pos).humidity);
-
-
             }
     }
 
@@ -64,49 +59,12 @@ public class ActivityDetails extends Activity {
         setForecast();
     }
 
-
     /**
      * update local data with data from server
      */
     void UpdateData() {
         onProcess = true;
-        new DownloadDataTask() {
-            @Override
-            protected void onPostExecute(String result) {
-                onProcess = false;
-                if (!result.isEmpty()) {
-                    convertData(result);
-                    setForecast();
-                }
-            }
-        }.execute("http://api.openweathermap.org/data/2.5/forecast/daily?id=" + Utils.Cities.get(pos).id + "&units=metric");
-
-    }
-
-    /**
-     * parse JSON object with forecast
-     */
-    void convertData(String data) {
-        try {
-            JSONObject o = new JSONObject(data);
-
-            JSONArray a = o.getJSONArray("list");
-            for (int i = 1; i < a.length(); ++i) {
-                ForecastInfo info = new ForecastInfo();
-
-                info.temp = a.getJSONObject(i).getJSONObject("temp").getString("day") + "°";
-                info.date = Utils.calcDate("dd MMMM", a.getJSONObject(i).getString("dt"));
-                info.weather = a.getJSONObject(i).getJSONArray("weather").getJSONObject(0).getString("main");
-                info.misc = Utils.calcPressure(this, a.getJSONObject(i).getString("pressure")) + ", " +
-                        a.getJSONObject(i).getString("humidity") + "%, " +
-                        a.getJSONObject(i).getString("speed") + "м/с";
-
-                Utils.Cities.get(pos).forecast[i - 1] = info;
-            }
-            Utils.SaveListToFile(this);
-        } catch (Exception e) {
-            return;
-        }
+        Api.daily(pos, this);
     }
 
     /**
@@ -131,11 +89,22 @@ public class ActivityDetails extends Activity {
                 TextView tvWeather = (TextView) forecast[i].findViewById(R.id.tvWeather);
                 TextView tvMisc = (TextView) forecast[i].findViewById(R.id.tvMisc);
 
-                forecastTemp.setText(c.forecast[i].temp);
+                forecastTemp.setText(String.format("%s%s", c.forecast[i].temp, getString(R.string.celsium)));
                 tvDate.setText(c.forecast[i].date);
                 tvWeather.setText(c.forecast[i].weather);
-                tvMisc.setText(c.forecast[i].misc);
+                tvMisc.setText(Utils.calcPressure(this, c.forecast[i].misc));
             }
         }
+    }
+
+    @Override
+    public void onComplete() {
+        Utils.SaveListToFile(this);
+        setForecast();
+    }
+
+    @Override
+    public void onError() {
+        //todo on error retrieve info from server
     }
 }

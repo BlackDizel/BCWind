@@ -6,9 +6,6 @@ import org.json.JSONObject;
 import ru.byters.bcwind.model.CityInfo;
 import ru.byters.bcwind.model.ForecastInfo;
 
-/**
- * Created by Sony on 13.12.2015.
- */
 public class JsonConverter {
     public static final String FIELD_COUNT = "count";
     public static final String FIELD_LIST = "list";
@@ -20,6 +17,13 @@ public class JsonConverter {
     public static final String FIELD_SPEED = "speed";
     public static final String FIELD_SYS = "sys";
     public static final String FIELD_COUNTRY = "country";
+    public static final String FIELD_DAY = "day";
+    public static final String FIELD_DT = "dt";
+    public static final String FIELD_WEATHER = "weather";
+    public static final String FIELD_PRESSURE = "pressure";
+    public static final String FIELD_HUMIDITY = "humidity";
+    public static final String DATE_FORMAT = "dd MMMM";
+    public static final String MISC_FORMAT = "%s, %s%%, %s м/с";
 
     public static void toCities(String data) throws Exception {
         int count = 0;
@@ -49,6 +53,23 @@ public class JsonConverter {
                 }
             }
 
+        }
+    }
+
+    public static void toForecast(int pos, String data) throws Exception {
+        JSONArray a = new JSONObject(data).getJSONArray(FIELD_LIST);
+        for (int i = 1; i < a.length(); ++i) {
+            ForecastInfo info = new ForecastInfo();
+
+            info.temp = a.getJSONObject(i).getJSONObject(FIELD_TEMP).getString(FIELD_DAY);
+            info.date = Utils.calcDate(DATE_FORMAT, a.getJSONObject(i).getString(FIELD_DT));
+            info.weather = a.getJSONObject(i).getJSONArray(FIELD_WEATHER).getJSONObject(0).getString(FIELD_MAIN);
+            info.misc = String.format(MISC_FORMAT
+                    , a.getJSONObject(i).getString(FIELD_PRESSURE)
+                    , a.getJSONObject(i).getString(FIELD_HUMIDITY)
+                    , a.getJSONObject(i).getString(FIELD_SPEED));
+
+            Utils.Cities.get(pos).forecast[i - 1] = info;
         }
     }
 

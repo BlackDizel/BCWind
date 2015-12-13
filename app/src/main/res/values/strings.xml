@@ -12,5 +12,6 @@
     <string name="mmrs">мм р.с.</string>
     <string name="error_add_city">cannot add city</string>
     <string name="city_added">city added</string>
+    <string name="celsium">°</string>
 
 </resources>
