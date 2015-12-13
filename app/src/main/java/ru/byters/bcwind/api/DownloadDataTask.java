@@ -9,11 +9,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class DownloadDataTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
@@ -28,12 +26,7 @@ public class DownloadDataTask extends AsyncTask<String, Void, String> {
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
                 HttpEntity entity = response.getEntity();
-                InputStream content = entity.getContent();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
+                return EntityUtils.toString(entity);
             } else
                 return "";
         } catch (ClientProtocolException e) {
@@ -41,8 +34,6 @@ public class DownloadDataTask extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             return "";
         }
-
-        return builder.toString();
     }
 
     protected void onPostExecute(String result) {
