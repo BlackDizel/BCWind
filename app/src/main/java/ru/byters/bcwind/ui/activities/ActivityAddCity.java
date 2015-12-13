@@ -108,7 +108,7 @@ public class ActivityAddCity extends Activity implements OnCompleteListener {
     void UpdateData(String query) {
         if (searchView != null)
             searchView.setEnabled(false);
-        Api.find(query, this);
+        Api.find(query, this); //todo if found more than 1 cities, show alert with list to select one item
     }
 
     @Override
