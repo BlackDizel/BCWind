@@ -71,7 +71,7 @@ public class ActivityAddCity extends Activity implements OnCompleteListener {
         if (Utils.Cities == null) Utils.LoadCities(this);
         if (lv != null) {
             @SuppressWarnings({"rawtypes", "unchecked"})
-            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylistremove_item, R.id.textViewCityNameRemove, Utils.Cities) {
+            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.view_city_remove, R.id.textViewCityNameRemove, Utils.Cities) {
                 @Override
                 public View getView(final int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);

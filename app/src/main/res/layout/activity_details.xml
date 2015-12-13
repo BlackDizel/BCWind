@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="4dp"
+    android:layout_margin="@dimen/acitivity_details_margin"
     android:orientation="vertical"
     tools:context="ru.byters.bcwind.ui.activities.ActivityDetails">
     <!-- сегодня -->
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="25 сентября, вт"
-            android:textSize="16pt" />
+            android:textSize="@dimen/activity_details_title" />
 
         <TextView
             android:id="@+id/tvTemp1"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="0"
-            android:textSize="16pt" />
+            android:textSize="@dimen/activity_details_title" />
 
         <TextView
             android:id="@+id/tvTempMinMax"
@@ -119,14 +119,14 @@
 
         <include
             android:id="@+id/forecast1"
-            layout="@layout/forecast_item"
+            layout="@layout/view_forecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <include
             android:id="@+id/forecast2"
-            layout="@layout/forecast_item"
+            layout="@layout/view_forecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -143,7 +143,7 @@
 
         <include
             android:id="@+id/forecast3"
-            layout="@layout/forecast_item"
+            layout="@layout/view_forecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -153,7 +153,7 @@
 
         <include
             android:id="@+id/forecast4"
-            layout="@layout/forecast_item"
+            layout="@layout/view_forecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -169,7 +169,7 @@
 
         <include
             android:id="@+id/forecast5"
-            layout="@layout/forecast_item"
+            layout="@layout/view_forecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -178,7 +178,7 @@
 
         <include
             android:id="@+id/forecast6"
-            layout="@layout/forecast_item"
+            layout="@layout/view_forecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />

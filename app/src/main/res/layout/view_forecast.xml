@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp">
+    android:layout_margin="@dimen/item_forecast_padding">
 
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="25 сентября, вт"
-        android:textSize="10pt" />
+        android:textSize="@dimen/item_forecast_title" />
 
     <TextView
         android:id="@+id/tvWeather"
@@ -25,7 +25,7 @@
         android:layout_alignRight="@+id/tvDate"
         android:layout_below="@+id/tvDate"
         android:text="24°"
-        android:textSize="10pt" />
+        android:textSize="@dimen/item_forecast_title" />
 
     <TextView
         android:id="@+id/tvMisc"
@@ -33,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/tvTemp"
         android:layout_below="@+id/tvTemp"
-
         android:text="760 мм р.с.; 5 м/с, Ю; 95%" />
 
 </RelativeLayout>

@@ -94,7 +94,7 @@ public class ActivityMain extends Activity implements OnCompleteListener {
     void SetAdapter() {
         if (lv != null) {
             @SuppressWarnings({"rawtypes", "unchecked"})
-            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylist_item, R.id.cName, Utils.Cities) {
+            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.view_city, R.id.cName, Utils.Cities) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
