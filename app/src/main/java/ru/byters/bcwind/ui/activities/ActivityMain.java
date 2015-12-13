@@ -68,7 +68,7 @@ public class ActivityMain extends Activity implements OnCompleteListener {
                 s.append(",").append(Utils.Cities.get(i).id);
         }
 
-        Api.group(s.toString(), this);
+        Api.group(this, s.toString(), this);
     }
 
     @Override

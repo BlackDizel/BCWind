@@ -71,7 +71,7 @@ public class ActivityDetails extends Activity implements OnCompleteListener {
      */
     void UpdateData() {
         onProcess = true;
-        Api.daily(pos, this);
+        Api.daily(this, pos, this);
     }
 
     /**

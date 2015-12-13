@@ -1,5 +1,8 @@
 package ru.byters.bcwind.api;
 
+import android.content.Context;
+
+import ru.byters.bcwind.R;
 import ru.byters.bcwind.utils.JsonConverter;
 import ru.byters.bcwind.utils.Utils;
 
@@ -8,8 +11,18 @@ public class Api {
     private static final String API_FIND = "/find?q=%s&type=like&lang=ru&units=metric";
     private static final String API_DAILY = "/forecast/daily?id=%s&units=metric";
     private static final String API_GROUP = "/group?id=%s&units=metric&lang=ru";
+    private static final String APP_ID = "&APPID=";
 
-    public static void find(String query, final OnCompleteListener listener) {
+    private static String getUri(Context context, String method) {
+        //todo add openweathermap_key by register on openweathermap.org
+        return String.format("%s%s%s%s"
+                , SERVER_URI
+                , method
+                , APP_ID
+                , context.getString(R.string.openweathermap_key));
+    }
+
+    public static void find(Context context, String query, final OnCompleteListener listener) {
         if (!query.isEmpty()) {
             new DownloadDataTask() {
                 @Override
@@ -23,11 +36,11 @@ public class Api {
                         }
                     } else if (listener != null) listener.onError();
                 }
-            }.execute(String.format(SERVER_URI + API_FIND, query.replace(" ", "%20")));
+            }.execute(String.format(getUri(context, API_FIND), query.replace(" ", "%20")));
         }
     }
 
-    public static void daily(final int pos, final OnCompleteListener listener) {
+    public static void daily(Context context, final int pos, final OnCompleteListener listener) {
         new DownloadDataTask() {
             @Override
             protected void onPostExecute(String result) {
@@ -40,11 +53,11 @@ public class Api {
                     }
                 } else if (listener != null) listener.onError();
             }
-        }.execute(String.format(SERVER_URI + API_DAILY, Utils.Cities.get(pos).id));
+        }.execute(String.format(getUri(context, API_DAILY), Utils.Cities.get(pos).id));
 
     }
 
-    public static void group(String cities, final OnCompleteListener listener) {
+    public static void group(Context context, String cities, final OnCompleteListener listener) {
         new DownloadDataTask() {
             @Override
             protected void onPostExecute(String result) {
@@ -57,6 +70,6 @@ public class Api {
                     }
                 } else if (listener != null) listener.onError();
             }
-        }.execute(String.format(SERVER_URI + API_GROUP, cities));
+        }.execute(String.format(getUri(context, API_GROUP), cities));
     }
 }
