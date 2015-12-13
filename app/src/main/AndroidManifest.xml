@@ -8,7 +8,7 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -26,10 +26,10 @@
         </activity>
         <activity
             android:name=".ui.activities.ActivityDetails"
-            android:label="@string/title_activity_activity_details"></activity>
+            android:label="@string/title_activity_activity_details"/>
         <activity
             android:name=".ui.activities.ActivityAddCity"
-            android:label="@string/title_activity_activity_add_city"></activity>
+            android:label="@string/title_activity_activity_add_city"/>
     </application>
 
 </manifest>
