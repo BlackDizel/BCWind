@@ -51,7 +51,7 @@ public class ActivityMain extends Activity {
         });
 
         if (Utils.Cities == null)
-            Utils.LoadCityes(this);
+            Utils.LoadCities(this);
     }
 
     @Override

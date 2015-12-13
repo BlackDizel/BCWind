@@ -15,29 +15,14 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.Locale;
 
 import ru.byters.bcwind.R;
 import ru.byters.bcwind.api.Api;
 import ru.byters.bcwind.api.OnCompleteListener;
-import ru.byters.bcwind.model.CityInfo;
-import ru.byters.bcwind.model.ForecastInfo;
 import ru.byters.bcwind.utils.Utils;
 
 public class ActivityAddCity extends Activity implements OnCompleteListener {
-    public static final String FIELD_COUNT = "count";
-    public static final String FIELD_LIST = "list";
-    public static final String FIELD_NAME = "name";
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_MAIN = "main";
-    public static final String FIELD_TEMP = "temp";
-    public static final String FIELD_WIND = "wind";
-    public static final String FIELD_SPEED = "speed";
-    public static final String FIELD_SYS = "sys";
-    public static final String FIELD_COUNTRY = "country";
     ListView lv;
     SearchView searchView;
 
@@ -83,7 +68,7 @@ public class ActivityAddCity extends Activity implements OnCompleteListener {
      * set adapter for current cities
      */
     void SetAdapter() {
-        if (Utils.Cities == null) Utils.LoadCityes(this);
+        if (Utils.Cities == null) Utils.LoadCities(this);
         if (lv != null) {
             @SuppressWarnings({"rawtypes", "unchecked"})
             ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylistremove_item, R.id.textViewCityNameRemove, Utils.Cities) {
@@ -120,48 +105,6 @@ public class ActivityAddCity extends Activity implements OnCompleteListener {
         Toast.makeText(getApplicationContext(), R.string.error_add_city, Toast.LENGTH_LONG).show();
     }
 
-    /**
-     * parse json object to city list
-     */
-    void ConvertData(String data) {
-        try {
-            int count = 0;
-            JSONObject o = new JSONObject(data);
-            count = o.getInt(FIELD_COUNT);
-            if (count == 0) ShowError();
-            else {
-                JSONArray a = o.getJSONArray(FIELD_LIST);
-                for (int i = 0; i < a.length(); ++i) {
-                    if (Utils.Cities != null) {
-                        CityInfo ci = new CityInfo();
-                        ci.name = a.getJSONObject(i).getString(FIELD_NAME);
-                        ci.id = a.getJSONObject(i).getString(FIELD_ID);
-                        ci.temp = a.getJSONObject(i).getJSONObject(FIELD_MAIN).getString(FIELD_TEMP);
-                        ci.windspeed = a.getJSONObject(i).getJSONObject(FIELD_WIND).getString(FIELD_SPEED);
-                        ci.country = a.getJSONObject(i).getJSONObject(FIELD_SYS).getString(FIELD_COUNTRY);
-                        ci.forecast = new ForecastInfo[]
-                                {
-                                        new ForecastInfo(),
-                                        new ForecastInfo(),
-                                        new ForecastInfo(),
-                                        new ForecastInfo(),
-                                        new ForecastInfo(),
-                                        new ForecastInfo()
-                                };
-                        Utils.Cities.add(ci);
-                    }
-                }
-                Toast.makeText(getApplicationContext(), R.string.city_added, Toast.LENGTH_LONG).show();
-                Utils.SaveListToFile(getApplicationContext()); //todo only when user leave this activity
-                SetAdapter();
-            }
-
-        } catch (Exception e) {
-            ShowError();
-        }
-
-    }
-
     void UpdateData(String query) {
         if (searchView != null)
             searchView.setEnabled(false);
@@ -169,10 +112,12 @@ public class ActivityAddCity extends Activity implements OnCompleteListener {
     }
 
     @Override
-    public void onComplete(String s) {
+    public void onComplete() {
         if (searchView != null)
             searchView.setEnabled(true);
-        ConvertData(s);
+        Toast.makeText(getApplicationContext(), R.string.city_added, Toast.LENGTH_LONG).show();
+        Utils.SaveListToFile(getApplicationContext());
+        SetAdapter();
     }
 
     @Override

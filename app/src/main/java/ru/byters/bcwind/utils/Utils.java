@@ -39,7 +39,7 @@ public class Utils {
 
     public static ArrayList<CityInfo> Cities;
 
-    public static void LoadCityes(Context ctx) {
+    public static void LoadCities(Context ctx) {
         ArrayList<CityInfo> arr = readFromFile(ctx);
         if (arr == null) {
 
