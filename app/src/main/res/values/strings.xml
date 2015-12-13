@@ -18,5 +18,6 @@
     <string name="SPEED_FORMAT">%sм/с</string>
     <string name="PERCENT_FORMAT">%s%%</string>
     <string name="CELSIUM_FORMAT">%s@string/celsium</string>
+    <string name="misc_format">%s, %s%%, %s м/с</string>
 
 </resources>

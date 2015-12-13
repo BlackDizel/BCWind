@@ -6,5 +6,7 @@ public class ForecastInfo implements Serializable {
     public String date;
     public String temp;
     public String weather;
-    public String misc;
+    public String pressure;
+    public String humidity;
+    public String speed;
 }

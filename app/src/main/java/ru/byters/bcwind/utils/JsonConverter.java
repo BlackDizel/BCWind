@@ -28,7 +28,6 @@ public class JsonConverter {
     public static final String FIELD_PRESSURE = "pressure";
     public static final String FIELD_HUMIDITY = "humidity";
     public static final String DATE_FORMAT = "dd MMMM";
-    public static final String MISC_FORMAT = "%s, %s%%, %s м/с";
     public static final String FIELD_SUNRISE = "sunrise";
     public static final String FIELD_SUNSET = "sunset";
     public static final String FIELD_TEMP_MIN = "temp_min";
@@ -73,10 +72,9 @@ public class JsonConverter {
             info.temp = a.getJSONObject(i).getJSONObject(FIELD_TEMP).getString(FIELD_DAY);
             info.date = Utils.calcDate(DATE_FORMAT, a.getJSONObject(i).getString(FIELD_DT));
             info.weather = a.getJSONObject(i).getJSONArray(FIELD_WEATHER).getJSONObject(0).getString(FIELD_MAIN);
-            info.misc = String.format(MISC_FORMAT
-                    , a.getJSONObject(i).getString(FIELD_PRESSURE)
-                    , a.getJSONObject(i).getString(FIELD_HUMIDITY)
-                    , a.getJSONObject(i).getString(FIELD_SPEED));
+            info.pressure = a.getJSONObject(i).getString(FIELD_PRESSURE);
+            info.humidity =  a.getJSONObject(i).getString(FIELD_HUMIDITY);
+            info.speed =  a.getJSONObject(i).getString(FIELD_SPEED);
 
             Utils.Cities.get(pos).forecast[i - 1] = info;
         }

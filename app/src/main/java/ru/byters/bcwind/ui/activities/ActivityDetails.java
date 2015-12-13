@@ -99,7 +99,11 @@ public class ActivityDetails extends Activity implements OnCompleteListener {
                 forecastTemp.setText(String.format(getString(R.string.CELSIUM_FORMAT), c.forecast[i].temp));
                 tvDate.setText(c.forecast[i].date);
                 tvWeather.setText(c.forecast[i].weather);
-                tvMisc.setText(Utils.calcPressure(this, c.forecast[i].misc));
+
+                tvMisc.setText(String.format(getString(R.string.misc_format),
+                        Utils.calcPressure(this, c.forecast[i].pressure)
+                        , c.forecast[i].humidity
+                        , c.forecast[i].speed));
             }
         }
     }
