@@ -1,6 +1,8 @@
 package ru.byters.bcwind.model;
 
-public class CityInfo {
+import java.io.Serializable;
+
+public class CityInfo implements Serializable {
     public String date;
     public String name;
     public String country;
