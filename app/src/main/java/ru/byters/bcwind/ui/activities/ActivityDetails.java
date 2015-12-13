@@ -30,9 +30,9 @@ public class ActivityDetails extends Activity {
             pos = extras.getInt(getString(R.string.id_listitem));
         else pos = 0;
 
-        if (Utils.Cityes != null)
-            if (Utils.Cityes.size() > pos) {
-                setTitle(Utils.Cityes.get(pos).name);
+        if (Utils.Cities != null)
+            if (Utils.Cities.size() > pos) {
+                setTitle(Utils.Cities.get(pos).name);
 
                 TextView tvDate = (TextView) findViewById(R.id.tvDate);
                 TextView tvTemp1 = (TextView) findViewById(R.id.tvTemp1);
@@ -43,14 +43,14 @@ public class ActivityDetails extends Activity {
                 TextView tvPressure = (TextView) findViewById(R.id.tvPressure);
                 TextView tvHumidity = (TextView) findViewById(R.id.tvHumidity);
 
-                tvDate.setText(Utils.Cityes.get(pos).date);
-                tvTemp1.setText(Utils.Cityes.get(pos).temp);
-                tvTempMinMax.setText(Utils.Cityes.get(pos).tempMinMax);
-                tvWeather.setText(Utils.Cityes.get(pos).weather);
-                tvSunDay.setText(Utils.Cityes.get(pos).sunDay);
-                tvWind.setText(Utils.Cityes.get(pos).windspeed);
-                tvPressure.setText(Utils.Cityes.get(pos).pressure);
-                tvHumidity.setText(Utils.Cityes.get(pos).humidity);
+                tvDate.setText(Utils.Cities.get(pos).date);
+                tvTemp1.setText(Utils.Cities.get(pos).temp);
+                tvTempMinMax.setText(Utils.Cities.get(pos).tempMinMax);
+                tvWeather.setText(Utils.Cities.get(pos).weather);
+                tvSunDay.setText(Utils.Cities.get(pos).sunDay);
+                tvWind.setText(Utils.Cities.get(pos).windspeed);
+                tvPressure.setText(Utils.Cities.get(pos).pressure);
+                tvHumidity.setText(Utils.Cities.get(pos).humidity);
 
 
             }
@@ -79,7 +79,7 @@ public class ActivityDetails extends Activity {
                     setForecast();
                 }
             }
-        }.execute("http://api.openweathermap.org/data/2.5/forecast/daily?id=" + Utils.Cityes.get(pos).id + "&units=metric");
+        }.execute("http://api.openweathermap.org/data/2.5/forecast/daily?id=" + Utils.Cities.get(pos).id + "&units=metric");
 
     }
 
@@ -97,11 +97,11 @@ public class ActivityDetails extends Activity {
                 info.temp = a.getJSONObject(i).getJSONObject("temp").getString("day") + "°";
                 info.date = Utils.calcDate("dd MMMM", a.getJSONObject(i).getString("dt"));
                 info.weather = a.getJSONObject(i).getJSONArray("weather").getJSONObject(0).getString("main");
-                info.misc = Utils.calcPressure(a.getJSONObject(i).getString("pressure")) + ", " +
+                info.misc = Utils.calcPressure(this, a.getJSONObject(i).getString("pressure")) + ", " +
                         a.getJSONObject(i).getString("humidity") + "%, " +
                         a.getJSONObject(i).getString("speed") + "м/с";
 
-                Utils.Cityes.get(pos).forecast[i - 1] = info;
+                Utils.Cities.get(pos).forecast[i - 1] = info;
             }
             Utils.SaveListToFile(this);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class ActivityDetails extends Activity {
      * put forecast info into activity
      */
     void setForecast() {
-        CityInfo c = Utils.Cityes.get(pos);
+        CityInfo c = Utils.Cities.get(pos);
         {
             if (forecast == null) {
                 forecast = new View[6];

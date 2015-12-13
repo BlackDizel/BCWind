@@ -50,7 +50,7 @@ public class ActivityMain extends Activity {
             }
         });
 
-        if (Utils.Cityes == null)
+        if (Utils.Cities == null)
             Utils.LoadCityes(this);
     }
 
@@ -73,10 +73,10 @@ public class ActivityMain extends Activity {
         onProcess = true;
         StringBuilder s = new StringBuilder();
         s.append("http://api.openweathermap.org/data/2.5/group?id=");
-        if (Utils.Cityes.size() > 0) {
-            s.append(Utils.Cityes.get(0).id);
-            for (int i = 1; i < Utils.Cityes.size(); ++i)
-                s.append("," + Utils.Cityes.get(i).id);
+        if (Utils.Cities.size() > 0) {
+            s.append(Utils.Cities.get(0).id);
+            for (int i = 1; i < Utils.Cities.size(); ++i)
+                s.append("," + Utils.Cities.get(i).id);
         }
         s.append("&units=metric&lang=ru");
 
@@ -85,7 +85,7 @@ public class ActivityMain extends Activity {
             protected void onPostExecute(String result) {
                 onProcess = false;
                 if (!result.isEmpty())
-                    Utils.Cityes = ConvertData(result);
+                    Utils.Cities = ConvertData(result);
                 SetAdapter();
             }
         }.execute(s.toString());
@@ -128,7 +128,7 @@ public class ActivityMain extends Activity {
                 c.windspeed = a.getJSONObject(i).getJSONObject("wind").getString("speed") + "м/с";
                 c.date = now.toString();
                 c.humidity = a.getJSONObject(i).getJSONObject("main").getString("humidity") + "%";
-                c.pressure = Utils.calcPressure(a.getJSONObject(i).getJSONObject("main").getString("pressure"));
+                c.pressure = Utils.calcPressure(this, a.getJSONObject(i).getJSONObject("main").getString("pressure"));
                 c.sunDay = "x " + Utils.calcDate("HH:mm", a.getJSONObject(i).getJSONObject("sys").getString("sunrise")) +
                         " xx " + Utils.calcDate("HH:mm", a.getJSONObject(i).getJSONObject("sys").getString("sunset"));
                 c.tempMinMax = "xx " + a.getJSONObject(i).getJSONObject("main").getString("temp_min") + "°" +
@@ -155,7 +155,7 @@ public class ActivityMain extends Activity {
             Utils.SaveListToFile(this);
             return list;
         } catch (Exception e) {
-            return Utils.Cityes;
+            return Utils.Cities;
         }
     }
 
@@ -165,7 +165,7 @@ public class ActivityMain extends Activity {
     void SetAdapter() {
         if (lv != null) {
             @SuppressWarnings({"rawtypes", "unchecked"})
-            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylist_item, R.id.cName, Utils.Cityes) {
+            ArrayAdapter mAdapter = new ArrayAdapter(this, R.layout.citylist_item, R.id.cName, Utils.Cities) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
@@ -173,9 +173,9 @@ public class ActivityMain extends Activity {
                     TextView tvCityTemp = (TextView) view.findViewById(R.id.cTemp);
                     TextView tvCityWeather = (TextView) view.findViewById(R.id.cWeather);
 
-                    tvCityName.setText(Utils.Cityes.get(position).name);
-                    tvCityTemp.setText(Utils.Cityes.get(position).temp);
-                    tvCityWeather.setText(Utils.Cityes.get(position).weather);
+                    tvCityName.setText(Utils.Cities.get(position).name);
+                    tvCityTemp.setText(Utils.Cities.get(position).temp);
+                    tvCityWeather.setText(Utils.Cities.get(position).weather);
 
                     view.setTag(position);
 

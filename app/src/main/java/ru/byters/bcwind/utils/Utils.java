@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ru.byters.bcwind.R;
 import ru.byters.bcwind.model.CityInfo;
 import ru.byters.bcwind.model.ForecastInfo;
 
@@ -36,13 +37,13 @@ public class Utils {
     private static final String FILENAME = "config.txt";
 
 
-    public static ArrayList<CityInfo> Cityes;
+    public static ArrayList<CityInfo> Cities;
 
     public static void LoadCityes(Context ctx) {
         ArrayList<CityInfo> arr = readFromFile(ctx);
         if (arr == null) {
 
-            Cityes = new ArrayList<CityInfo>();
+            Cities = new ArrayList<CityInfo>();
             CityInfo c = new CityInfo();
             c.id = "524901";
             c.name = "Moscow";
@@ -59,7 +60,7 @@ public class Utils {
                             new ForecastInfo(),
                             new ForecastInfo(),
                     };
-            Cityes.add(c);
+            Cities.add(c);
 
             c = new CityInfo();
             c.id = "703448";
@@ -77,7 +78,7 @@ public class Utils {
                             new ForecastInfo(),
                             new ForecastInfo(),
                     };
-            Cityes.add(c);
+            Cities.add(c);
 
             c = new CityInfo();
             c.id = "2643743";
@@ -95,8 +96,8 @@ public class Utils {
                             new ForecastInfo(),
                             new ForecastInfo(),
                     };
-            Cityes.add(c);
-        } else Cityes = arr;
+            Cities.add(c);
+        } else Cities = arr;
     }
 
     /**
@@ -104,7 +105,7 @@ public class Utils {
      */
     public static void SaveListToFile(Context ctx) {
         JSONArray arraylist = new JSONArray();
-        for (CityInfo ci : Cityes) {
+        for (CityInfo ci : Cities) {
             JSONObject object = new JSONObject();
             try {
                 object.put(ID, ci.id);
@@ -223,10 +224,10 @@ public class Utils {
 
     }
 
-    public static String calcPressure(String data) {
+    public static String calcPressure(Context context, String data) {
         double mbar = Double.valueOf(data);
         int mmrs = (int) Math.round((mbar / 1.3332));
-        return String.valueOf(mmrs) + "мм р.с.";
+        return String.valueOf(mmrs) + context.getResources().getString(R.string.mmrs) ;
     }
 
 }
